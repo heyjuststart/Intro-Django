@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from notes.api import PersonalNoteViewSet
+from graphene_django.views import GraphQLView
 
 # similar to express routes, r"notes" designates a regex
 router = routers.DefaultRouter()
@@ -25,4 +26,6 @@ router.register(r"notes", PersonalNoteViewSet)
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include(router.urls)),  # api/notes etc...
+    # add graphQL route with graphiql interface enabled
+    path("graphql/", GraphQLView.as_view(graphiql=True)),
 ]
