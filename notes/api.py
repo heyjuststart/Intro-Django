@@ -21,6 +21,18 @@ class PersonalNoteSerializer(serializers.HyperlinkedModelSerializer):
         fields = ("title", "content")
 
 
+# has access to request directly
 class PersonalNoteViewSet(viewsets.ModelViewSet):
     serializer_class = PersonalNoteSerializer
-    queryset = PersonalNote.objects.all()
+    queryset = PersonalNote.objects.none() # empty dictionary
+
+    def get_queryset(self):
+        user = self.request.user
+
+        # built in auth apparently has an is_anonymous
+        if user.is_anonymous:
+            # return none if they're anonymous
+            return PersonalNote.objects.none()
+        else:
+            return PersonalNote.objects.filter(user=user)
+
